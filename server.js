@@ -25,12 +25,10 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     let textoExtraido = '';
 
     if (ext === '.pdf') {
-      // Si es PDF, usa pdf-parse
       const buffer = fs.readFileSync(filePath);
       const content = await pdfParse(buffer);
       textoExtraido = content.text;
     } else if (ext === '.docx') {
-      // Si es Word, usa mammoth para extraer texto
       const buffer = fs.readFileSync(filePath);
       const result = await mammoth.extractRawText({ buffer });
       textoExtraido = result.value;
@@ -53,7 +51,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
   }
 });
 
-// Extrae preguntas que terminan en signo de interrogación
+
 function extraerPreguntas(texto) {
   return texto
     .split('\n')
@@ -61,7 +59,7 @@ function extraerPreguntas(texto) {
     .filter(line => line.endsWith('?'));
 }
 
-// Llama a la API de Groq para obtener respuestas
+// groq
 async function obtenerRespuestas(preguntas) {
   const respuestas = [];
 
@@ -93,7 +91,7 @@ async function obtenerRespuestas(preguntas) {
   return respuestas;
 }
 
-// Genera un PDF con las preguntas y respuestas
+// crear el pdf de respuestas
 async function generarPDF(preguntas, respuestas) {
   const outputDir = path.join(__dirname, 'output');
   if (!fs.existsSync(outputDir)) {
