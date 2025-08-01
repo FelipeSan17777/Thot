@@ -80,6 +80,7 @@ async function obtenerRespuestas(preguntas) {
   for (const pregunta of preguntas) {
     try {
       const idioma = franc(pregunta);
+      const idiomaFinal = (idioma === 'und') ? 'spa' : idioma;
 
       const instruccionesIdioma = {
         'spa': 'Responde en español.',
@@ -89,12 +90,12 @@ async function obtenerRespuestas(preguntas) {
         'deu': 'Antworten Sie auf Deutsch.'
       };
 
-      const instruccion = instruccionesIdioma[idioma] || 'Responde en el idioma original de la pregunta.';
+      const instruccion = instruccionesIdioma[idiomaFinal] || 'Responde en español.';
 
       const response = await axios.post(
         'https://api.groq.com/openai/v1/chat/completions',
         {
-          model: 'deepseek-r1-distill-llama-70b',
+          model: 'deepseek-llm-67b-chat',
           messages: [
             { role: 'system', content: instruccion },
             { role: 'user', content: pregunta }
