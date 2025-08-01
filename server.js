@@ -95,7 +95,7 @@ async function obtenerRespuestas(preguntas) {
       const response = await axios.post(
         'https://api.groq.com/openai/v1/chat/completions',
         {
-          model: 'deepseek-llm-67b-chat',
+          model: 'deepseek-r1-distill-llama-70b',
           messages: [
             { role: 'system', content: instruccion },
             { role: 'user', content: pregunta }
