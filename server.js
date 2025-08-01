@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const franc = require('franc');
 const fs = require('fs');
 const pdfParse = require('pdf-parse');
 const mammoth = require('mammoth');  
