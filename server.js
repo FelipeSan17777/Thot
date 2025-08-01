@@ -73,7 +73,7 @@ function extraerPreguntas(texto) {
   return Array.from(resultados);
 }
 
-// groq
+
 async function obtenerRespuestas(preguntas) {
   const respuestas = [];
 
@@ -120,7 +120,7 @@ async function obtenerRespuestas(preguntas) {
   return respuestas;
 }
 
-// crear el pdf de respuestas
+
 async function generarPDF(preguntas, respuestas) {
   const outputDir = path.join(__dirname, 'output');
   if (!fs.existsSync(outputDir)) {
