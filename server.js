@@ -51,7 +51,6 @@ app.post('/upload', upload.single('file'), async (req, res) => {
   }
 });
 
-
 function extraerPreguntas(texto) {
   const resultados = new Set();
 
@@ -82,7 +81,7 @@ async function obtenerRespuestas(preguntas) {
       const response = await axios.post(
         'https://api.groq.com/openai/v1/chat/completions',
         {
-          model: 'mistral-saba-24b',
+          model: 'deepseek-r1-distill-llama-70b',
           messages: [{ role: 'user', content: pregunta }],
           temperature: 0.5
         },
