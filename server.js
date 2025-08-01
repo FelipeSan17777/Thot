@@ -53,10 +53,37 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
 
 function extraerPreguntas(texto) {
-  return texto
-    .split('\n')
-    .map(line => line.trim())
-    .filter(line => line.endsWith('?'));
+  const posiblesPreguntas = new Set();
+
+  const lineas = texto.split(/[\r\n]+/);
+  const interrogativos = [
+    '¿', 'qué', 'que', 'cómo', 'como', 'por qué', 'porque', 'cuándo', 'cuando',
+    'cuál', 'cual', 'cuáles', 'quién', 'quienes', 'dónde', 'donde',
+    'para qué', 'explica', 'describe', 'menciona', 'analiza', 'define', 'señala', 'indica'
+  ];
+
+  for (let linea of lineas) {
+    linea = linea.trim();
+    if (linea.length < 10) continue;
+
+    const oraciones = linea.split(/(?<=[.?!])\s+/);
+    for (let oracion of oraciones) {
+      const limpia = oracion.trim();
+      const lower = limpia.toLowerCase();
+
+      const parecePregunta =
+        limpia.endsWith('?') ||
+        limpia.startsWith('¿') ||
+        interrogativos.some(p => lower.startsWith(p)) ||
+        interrogativos.some(p => lower.includes(p) && lower.endsWith('.'));
+
+      if (parecePregunta) {
+        posiblesPreguntas.add(limpia);
+      }
+    }
+  }
+
+  return Array.from(posiblesPreguntas);
 }
 
 // groq
