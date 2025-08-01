@@ -3,7 +3,7 @@ const multer = require('multer');
 const { franc } = require('franc');
 const fs = require('fs');
 const pdfParse = require('pdf-parse');
-const mammoth = require('mammoth');  
+const mammoth = require('mammoth');
 const PDFDocument = require('pdfkit');
 const path = require('path');
 const axios = require('axios');
@@ -54,12 +54,11 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
 function extraerPreguntas(texto) {
   const resultados = new Set();
-
   const lineas = texto.split(/[\r\n]+/);
 
   for (let linea of lineas) {
     linea = linea.trim();
-    if (linea.length < 5) continue; 
+    if (linea.length < 5) continue;
 
     const oraciones = linea.split(/(?<=[.?!])\s+/);
     for (let oracion of oraciones) {
@@ -73,6 +72,10 @@ function extraerPreguntas(texto) {
   return Array.from(resultados);
 }
 
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 async function obtenerRespuestas(preguntas) {
   const respuestas = [];
@@ -116,11 +119,13 @@ async function obtenerRespuestas(preguntas) {
       console.error(`Error con la pregunta "${pregunta}":`, err.response?.data?.error || err.message);
       respuestas.push('Error al generar respuesta');
     }
+
+
+    await delay(1500);
   }
 
   return respuestas;
 }
-
 
 async function generarPDF(preguntas, respuestas) {
   const outputDir = path.join(__dirname, 'output');
@@ -148,6 +153,10 @@ async function generarPDF(preguntas, respuestas) {
 
   return outputPath;
 }
+
+app.get('/', (req, res) => {
+  res.send('Servidor activo. Usa /upload para enviar un archivo PDF o DOCX.');
+});
 
 app.listen(3000, () => {
   console.log('Servidor escuchando en http://localhost:3000');
